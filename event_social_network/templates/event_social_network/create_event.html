@@ -1,0 +1,13 @@
+{% extends 'event_social_network/base.html' %}
+{% block title %}Create New Event{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Create Event</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Create Event">
+    </form>
+{% endblock %}
+

@@ -1,0 +1,109 @@
+{% extends "event_social_network/base.html" %}
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">User Information</h5>
+                    <p class="card-text">Username: {{ profile_user.username }}</p>
+                    <p class="card-text">Email: {{ profile_user.email }}</p>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Your Events</h5>
+                    {% if events %}
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            {% for event in events %}
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ event.title }}</h5>
+                                            <p class="card-text">Date: {{ event.date }}</p>
+                                            <p class="card-text">Time: {{ event.time }}</p>
+                                            <p class="card-text">Location: {{ event.location }}</p>
+                                            {% if request.user == profile_user %}
+                                                <a href="{% url 'edit_event' event.id %}" class="btn btn-primary">Edit</a>
+                                                <a href="{% url 'delete_event' event.id %}" class="btn btn-danger">Delete</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No events found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            {% if request.user == profile_user %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Friend Requests</h5>
+                    {% if pending_friend_requests %}
+                        <ul class="list-group">
+                            {% for req in pending_friend_requests %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ req.user1.username }}
+                                    <div>
+                                        <form method="post" action="{% url 'accept_friend_request' req.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                        </form>
+                                        <form method="post" action="{% url 'reject_friend_request' req.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No pending friend requests.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Friends</h5>
+                    {% if friends %}
+                        <ul class="list-group">
+                            {% for friendship in friends %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {% if friendship.user1 == profile_user %}
+                                        Friend: <a href="{% url 'user_profile' friendship.user2.id %}">{{ friendship.user2.username }}</a>
+                                    {% else %}
+                                        Friend: <a href="{% url 'user_profile' friendship.user1.id %}">{{ friendship.user1.username }}</a>
+                                    {% endif %}
+                                    {% if request.user == profile_user %}
+                                        <form method="post" action="{% url 'remove_friend' friendship.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Remove Friend</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No friends found.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Sidebar</h5>
+                    <p class="card-text">More info in progress</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+# Environment variables
+.env
+
+# Python stuff
+__pycache__/
+
+
+# Django stuff:
+staticfiles/
+
+# virtualenv
+my_django/
+
+# The local database
+db.sqlite3
+
+
+# React stuff:
+node_modules/
+/.pnp
+.pnp.js
+
+# testing
+/coverage/
+.coverage
+
+# production
+/build
+**/dist/
+
+# IDEs
+.vscode/
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,48 @@
+{% extends 'event_social_network/base.html' %}
+{% block title %}Search Results{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>Search Results for "{{ query }}"</h1>
+
+<h2>User Results:</h2>
+<ul>
+    {% for user, friendship_status, friendship_id in user_search_results %}
+        <li>
+            <a href="{% url 'user_profile' user.id %}">{{ user.username }}</a>
+            {% if friendship_status == 'pending' %}
+                <p>Friend request is sent</p>
+                <form method="post" action="{% url 'cancel_friend_request' friendship_id %}">
+                    {% csrf_token %}
+                    <button type="submit">Cancel friend request</button>
+                </form>
+            {% elif friendship_status == 'accepted' %}
+                <p>Friends</p>
+                <form method="post" action="{% url 'remove_friend' friendship_id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remove Friend</button>
+                </form>
+            {% elif friendship_status == 'not_friends' %}
+                <form method="post" action="{% url 'send_friend_request' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Send Friend Request</button>
+                </form>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No users found</li>
+    {% endfor %}
+</ul>
+
+<h2>Event Results:</h2>
+<ul>
+    {% for event in event_results %}
+        <li>
+            <a href="{% url 'event_details' event.id %}">{{ event.title }}</a>
+            <p>{{ event.description }}</p>
+        </li>
+    {% empty %}
+        <li>No events found</li>
+    {% endfor %}
+</ul>
+{% endblock %}

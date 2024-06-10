@@ -1,0 +1,26 @@
+{% extends 'event_social_network/base.html' %}
+{% block title %}User Search{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">User and Event Search</h2>
+                        <br>
+                        <form method="get">
+                            <div class="input-group mb-3">
+                                {{ form.query|as_crispy_field }}
+                                <div class="input-group-append"><br><br><br><br><br><br><br>
+                                    <button class="btn btn-primary" type="submit">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
